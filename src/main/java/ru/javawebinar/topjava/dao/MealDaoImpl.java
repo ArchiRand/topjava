@@ -31,7 +31,7 @@ public class MealDaoImpl implements MealDao {
     @Override
     public List<MealWithExceed> getUserMeal() {
         if (USER_MEAL.isEmpty()) {
-            for (Meal y : MealsUtil.MEALS_LIST) {
+            for (Meal y : MealsUtil.MEALS) {
                 int x = ID.incrementAndGet();
                 y.setId(x);
                 USER_MEAL.put(x, y);
