@@ -1,11 +1,16 @@
-package ru.javawebinar.topjava.service;
+package ru.javawebinar.topjava.repository;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.Role;
 
 import java.util.Collection;
 
-public interface MealService {
-    Meal save(Meal meal, int userId);
+/**
+ * GKislin
+ * 06.03.2015.
+ */
+public interface UserMealRepository {
+    Meal save(Meal Meal, int userId);
 
     boolean delete(int id, int userId);
 
@@ -13,7 +18,7 @@ public interface MealService {
 
     Collection<Meal> getAll(int userId);
 
-    void deleteAll(int userId);
+    boolean deleteAll(int userId);
 
     void update(Meal meal, int userId);
 }
