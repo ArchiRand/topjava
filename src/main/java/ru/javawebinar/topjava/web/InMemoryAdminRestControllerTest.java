@@ -12,6 +12,7 @@ import ru.javawebinar.topjava.web.user.AdminRestController;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static com.sun.xml.internal.ws.dump.LoggingDumpTube.Position.Before;
 import static ru.javawebinar.topjava.UserTestData.ADMIN;
 import static ru.javawebinar.topjava.UserTestData.USER;
 

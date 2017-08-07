@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.dao;
 
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealWithExceed;
+import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalTime;
@@ -31,7 +31,7 @@ public class MealDaoImpl implements MealDao {
     @Override
     public List<MealWithExceed> getUserMeal() {
         if (USER_MEAL.isEmpty()) {
-            for (Meal y : MealsUtil.MEALS_LIST) {
+            for (Meal y : MealsUtil.MEALS) {
                 int x = ID.incrementAndGet();
                 y.setId(x);
                 USER_MEAL.put(x, y);

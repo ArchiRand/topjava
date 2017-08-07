@@ -46,7 +46,7 @@ public class UserServiceTest {
         User newUser = new User(null, "New", "new@gmail.com", "newPass", 1555, false, Collections.singleton(Role.ROLE_USER));
         User created = service.save(newUser);
         newUser.setId(created.getId());
-        MATCHER.assertCollectionEquals(Arrays.asList(ADMIN, newUser, USER), service.getAll());
+        USER_MATCHER.assertCollectionEquals(Arrays.asList(ADMIN, newUser, USER), service.getAll());
     }
 
     @Test(expected = DataAccessException.class)
