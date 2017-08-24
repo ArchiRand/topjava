@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserService {
 
-    User save(User user);
+    User create(User user);
 
     void delete(int id) throws NotFoundException;
 
@@ -16,7 +16,9 @@ public interface UserService {
 
     User getByEmail(String email) throws NotFoundException;
 
-    List<User> getAll();
-
     void update(User user);
+
+    void evictCache();
+
+    List<User> getAll();
 }

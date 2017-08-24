@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -20,9 +21,7 @@ import java.util.stream.Stream;
 
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
-    private static final Logger LOG = LoggerFactory.getLogger(InMemoryUserRepositoryImpl.class);
-
-    private static final Comparator<Meal> MEAL_COMPARATOR = Comparator.comparing(Meal::getDateTime).reversed();
+    private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepositoryImpl.class);
 
     // Map  userId -> (mealId-> meal)
     private Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
@@ -30,24 +29,34 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
+        Objects.requireNonNull(meal);
+
+        /*
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
         } else if (get(meal.getId(), userId) == null) {
             return null;
         }
         Map<Integer, Meal> meals = repository.computeIfAbsent(userId, ConcurrentHashMap::new);
-        meals.put(meal.getId(), meal);
-        return meal;
+        return meals.put(meal.getId(), meal);
+*/
+
+        Map<Integer, Meal> meals = repository.computeIfAbsent(userId, ConcurrentHashMap::new);
+        if (meal.isNew()) {
+            meal.setId(counter.incrementAndGet());
+            return meals.put(meal.getId(), meal);
+        }
+        return meals.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @PostConstruct
     public void postConstruct() {
-        LOG.info("+++ PostConstruct");
+        log.info("+++ PostConstruct");
     }
 
     @PreDestroy
     public void preDestroy() {
-        LOG.info("+++ PreDestroy");
+        log.info("+++ PreDestroy");
     }
 
     @Override
@@ -69,6 +78,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getBetween(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
+        Objects.requireNonNull(startDateTime);
+        Objects.requireNonNull(endDateTime);
         return getAllAsStream(userId)
                 .filter(um -> DateTimeUtil.isBetween(um.getDateTime(), startDateTime, endDateTime))
                 .collect(Collectors.toList());
@@ -77,7 +88,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private Stream<Meal> getAllAsStream(int userId) {
         Map<Integer, Meal> meals = repository.get(userId);
         return meals == null ?
-                Stream.empty() : meals.values().stream().sorted(MEAL_COMPARATOR);
+                Stream.empty() :
+                meals.values().stream()
+                        .sorted(Comparator.comparing(Meal::getDateTime).reversed());
     }
 }
-
